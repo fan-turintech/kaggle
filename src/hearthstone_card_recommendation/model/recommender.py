@@ -10,16 +10,13 @@ import torch
 
 class BPRRecommender(RecommendModel):
     def __init__(self):
-        self.model = cornac.models.BiVAECF(
-            k=50,
-            encoder_structure=[200],
-            act_fn="tanh",
-            likelihood="pois",
-            n_epochs=500,
+        self.model = cornac.models.vaecf.recom_vaecf.VAECF(
+            k=100,
+            autoencoder_structure=[500],
+            n_epochs=1000,
             batch_size=128,
             learning_rate=0.001,
-            seed=42,
-            use_gpu=torch.cuda.is_available(),
+            seed=24,
             verbose=True
         )
         self.train: List[List] = []

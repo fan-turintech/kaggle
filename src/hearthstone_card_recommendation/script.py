@@ -52,7 +52,7 @@ def evaluate(model: RecommendModel, data: pd.DataFrame, test_size: int, final_te
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--validation-size', dest='validation_size', default=200)
+    parser.add_argument('--validation-size', dest='validation_size', type=int, default=200)
     parser.add_argument('--submission', action='store_true')
     parser.add_argument('-m', '--model', dest='model_name', default='EnsembleKnowledge')
     args = parser.parse_args()
@@ -62,7 +62,7 @@ if __name__ == '__main__':
     else:
         test = None
     if args.model_name not in globals():
-        print(f"Specified model >{args.model_name}< is not found.")
+        print(f"Specified model >{args.model_name}< is not found. Terminating.")
         exit(0)
     model = globals()[args.model_name]()
     print(evaluate(model, data, args.validation_size, test))
