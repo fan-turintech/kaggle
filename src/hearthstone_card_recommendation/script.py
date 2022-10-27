@@ -1,9 +1,10 @@
 import pandas as pd
 import numpy as np
 import json
+import argparse
 from typing import List, Dict, Optional, Tuple, Set
 
-from model import RecommendModel, NaiveGraph, SimplePopularity, EnsembleKnowledge, SimilarityModel
+from model import *
 
 
 def create_target(data: pd.DataFrame):
@@ -50,12 +51,18 @@ def evaluate(model: RecommendModel, data: pd.DataFrame, test_size: int, final_te
 
 
 if __name__ == '__main__':
-    validation_size = 200
-    submission = False
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--validation-size', dest='validation_size', default=200)
+    parser.add_argument('--submission', action='store_true')
+    parser.add_argument('-m', '--model', dest='model_name', default='EnsembleKnowledge')
+    args = parser.parse_args()
     data = pd.read_csv("data/data_2018.csv")
-    if submission:
+    if args.submission:
         test = pd.read_csv("data/test.csv")
     else:
         test = None
-    model = EnsembleKnowledge()
-    print(evaluate(model, data, validation_size, test))
+    if args.model_name not in globals():
+        print(f"Specified model >{args.model_name}< is not found.")
+        exit(0)
+    model = globals()[args.model_name]()
+    print(evaluate(model, data, args.validation_size, test))
